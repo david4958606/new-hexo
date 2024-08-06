@@ -95,9 +95,11 @@ pagination_dir: page
 # ignore:
 
 # Extensions
-## Plugins: https://hexo.io/plugins/
+# Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: next
+plugins:
+  - hexo-generator-robotstxt
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -126,3 +128,19 @@ feed:
   icon: icon.png
   autodiscovery: true
   template:
+
+robotstxt:
+  useragent: "*"
+  disallow:
+    - /vendors/
+    - /js/
+    - /css/
+    - /images/
+    - /fonts/
+  allow:
+    - /
+    - /archives/
+    - /categories/
+    - /tags/
+    - /about/
+  sitemap: /sitemap.xml
