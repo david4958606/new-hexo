@@ -17,7 +17,7 @@ jobs:
           path: node_modules
           key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
 
-      - uses: yrpang/github-actions-hexo@v1.3
+      - uses: lber19535/github-actions-hexo@1.0
         with:
           deploykey: ${{secrets.HEXO_DEPLOY_PRI}}
           username: david4958606
