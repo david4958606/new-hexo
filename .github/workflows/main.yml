@@ -1,56 +1,24 @@
-name: CI
+name: Hexo Build and Deploy
 
-on: [push, workflow_dispatch]
-
-env:
-  GIT_USER: david4958606
-  GIT_EMAIL: david.wang@kirinou.top
-  DEPLOY_REPO: david4958606/david4958606.github.io
-  DEPLOY_BRANCH: master
+on: [push]
 
 jobs:
   build:
-    name: Build on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node_version: [18.x]
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v1
         with:
           submodules: true
 
-      - name: Checkout deploy repo
-        uses: actions/checkout@v4
+      - name: Cache node modules
+        uses: actions/cache@v1
         with:
-          repository: ${{ env.DEPLOY_REPO }}
-          ref: ${{ env.DEPLOY_BRANCH }}
-          path: .deploy_git
+          path: node_modules
+          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
 
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v4
+      - uses: yrpang/github-actions-hexo@v1.3
         with:
-          node-version: ${{ matrix.node_version }}
-
-      - name: Configuration environment
-        env:
-          HEXO_DEPLOY_PRI: ${{secrets.HEXO_DEPLOY_PRI}}
-        run: |
-          sudo timedatectl set-timezone "Asia/Singapore"
-          mkdir -p ~/.ssh/
-          echo "$HEXO_DEPLOY_PRI" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global user.name $GIT_USER
-          git config --global user.email $GIT_EMAILs
-
-      - name: Install dependencies
-        run: |
-          npm install
-
-      - name: Deploy hexo
-        run: |
-          npm run deploy
+          deploykey: ${{secrets.HEXO_DEPLOY_PRI}}
+          username: david4958606
+          email: david.wang@kirinou.top
