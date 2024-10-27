@@ -1,8 +1,15 @@
 ---
 title: 重构博客
-date: 2022-03-20 14:52:31
+date: 2024-10-27 15:09:00
 tags: [nodejs, 日志]
+description: 重构博客
 ---
+
+## 2024/10/27 更新
+
+- 原本的 GitHub Action Workflow 不工作了，fork 了一份并做了对应的修改，具体可看 [david4958606/hexo-action](https://github.com/david4958606/hexo-action)；
+- 修正一些拼写错误；
+- 修改url。
 
 ## 为什么要重构
 
@@ -14,7 +21,7 @@ tags: [nodejs, 日志]
 
 现在比较流行的搭建个人博客的方式主要有两种，一是我上文提到的在服务器上或者利用 SaaS 部署类似于 WordPress 这类基于 LAMP 的博客，第二种就是生成静态页面并直接显示（比如利用 GitHUb Pages）的模式，这种方式的主要代表就是 Hexo。
 
-考虑到笔者的博客以静态页面为主且服务器资源较少，笔者采用了 Hexo + GitHub Pages 的方案，同时将 Hexo 的运行环境也上传至 GitHub，使用 GitHUb Action 生成并部署页面。
+考虑到笔者的博客以静态页面为主且服务器资源较少，笔者采用了 Hexo + GitHub Pages 的方案，同时将 Hexo 的运行环境也上传至 GitHub，使用 GitHub Action 生成并部署页面。
 
 ## 重构流程
 
@@ -72,7 +79,7 @@ hexo s
 
 首先新建 GitHub 仓库，命名为 `<username>.github.io`，并生成 README。同时启用 GitHub Pages。
 
-准备一对 SSH 密钥，将公钥作为 Deploy Key 添加到 Pages 仓库，将私钥作为 Secret 添加到 `hexo-env` 并命名为 `DEPLOY_KEY`。
+准备一对 SSH 密钥，将公钥作为 Deploy Key 添加到 Pages 仓库，将私钥作为 Secret 添加到 `hexo-env` 并命名为 `HEXO_DEPLOY_PRI`。
 
 在 Hexo 文件夹中安装插件 `npm install hexo-deployer-git --save`，并按照 [官方文档](https://hexo.io/zh-cn/docs/one-command-deployment.html#Git) 修改配置。
 
@@ -109,9 +116,9 @@ jobs:
     # Deploy hexo blog website.
     - name: Deploy
       id: deploy
-      uses: sma11black/hexo-action@v1.0.4
+      uses: david4958606/hexo-action@v1
       with:
-        deploy_key: ${{ secrets.DEPLOY_KEY }}
+        deploy_key: ${{ secrets.HEXO_DEPLOY_PRI }}
         # user_name: your github username  # (or delete this input setting to use bot account)
         # user_email: your github useremail  # (or delete this input setting to use bot account)
         commit_msg: ${{ github.event.head_commit.message }}  # (or delete this input setting to use hexo default settings)
@@ -137,7 +144,7 @@ hexo clean
 如果需要在另外的工作环境中本地预览页面，还需要导入对应的子模块。首先克隆仓库到本地，然后执行
 
 ```bash
-cd theme/next
+cd themes/next
 git submodule init
 git submodule update
 ```
