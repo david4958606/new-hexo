@@ -1,7 +1,11 @@
 ---
 title: 使用 vcpkg 引入 Google Test 框架以及对应 CMake 配置写法
-tags: [C++, cmake]
+tags:
+  - C++
+  - cmake
+date: 2024-11-17 16:29:44
 ---
+
 
 ## 关于 vcpkg
 
